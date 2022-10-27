@@ -1,1 +1,1 @@
-# react-redux-todolist version 1
+# react-redux-todolist version 2
