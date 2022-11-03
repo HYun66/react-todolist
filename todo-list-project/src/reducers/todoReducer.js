@@ -1,4 +1,5 @@
 import {
+  FETCH_TODO,
   ADD_TODO,
   COMPLETE_TODO,
   DELETE_TODO,
@@ -7,10 +8,14 @@ import {
 
 const initialState = [];
 
+const fetchTodo = (todolist) => {
+  return [...todolist];
+};
+
 const addTodo = (state, newTodo) => {
   const { title, due, completed } = newTodo;
   const todo = {
-    id: Math.floor(Math.random() * 100000),
+    id: String(Math.floor(Math.random() * 100000)),
     title,
     due,
     completed,
@@ -58,6 +63,8 @@ const updateTodo = (state, updateTodo) => {
 
 const todoReducer = (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_TODO:
+      return fetchTodo(action.payload);
     case ADD_TODO:
       return addTodo(state, action.payload);
     case COMPLETE_TODO:

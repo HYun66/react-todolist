@@ -1,4 +1,5 @@
 import {
+  fetchTodo,
   addTodo,
   completeTodo,
   deleteTodo,
@@ -6,4 +7,4 @@ import {
   updateTodo,
 } from "./todoActions";
 
-export { addTodo, completeTodo, deleteTodo, filterTodo, updateTodo };
+export { fetchTodo, addTodo, completeTodo, deleteTodo, filterTodo, updateTodo };

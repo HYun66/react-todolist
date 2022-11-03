@@ -5,13 +5,14 @@ import {
   Typography,
   ButtonGroup,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import TodoForm from "./TodoForm";
 import { deleteTodo, completeTodo } from "../../actions";
+import { useFilterTodoList } from "./useFilterTodoList";
 
-const BUTTON_FILTER = {
+export const BUTTON_FILTER = {
   ALL: "all",
   REMAINING: "uncomplete",
   COMPLETED: "complete",
@@ -22,7 +23,6 @@ function Todo() {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState("");
   const [buttonFilter, setButtonFilter] = useState(BUTTON_FILTER.ALL);
-  const [todoList, setTodoList] = useState(todos);
 
   const handleButtonFilter = (filterKey) => (e) => {
     setButtonFilter(filterKey);
@@ -70,7 +70,7 @@ function Todo() {
     completed: false,
   });
 
-  const submitEditTodo = (newTodo) => {
+  const submitEditTodo = () => {
     setEditTodo({
       id: null,
       title: "",
@@ -94,34 +94,7 @@ function Todo() {
     dispatch(completeTodo(todoId));
   };
 
-  // filter search content and 3 types, sorting urgent todo
-  useEffect(() => {
-    let newTodoList = todos.filter((todo) =>
-      todo.title.toLowerCase().includes(filter.toLowerCase())
-    );
-    if (buttonFilter === BUTTON_FILTER.ALL) {
-    } else if (buttonFilter === BUTTON_FILTER.REMAINING) {
-      newTodoList = newTodoList.filter((todo) => !todo.completed);
-    } else if (buttonFilter === BUTTON_FILTER.COMPLETED) {
-      newTodoList = newTodoList.filter((todo) => todo.completed);
-    }
-    const dueTodoList = newTodoList
-      .filter(
-        (todo) =>
-          dayjs().diff(todo.due, "day") <= 0 &&
-          dayjs().diff(todo.due, "day") > -3
-      )
-      .sort((a, b) => dayjs(a.due) - dayjs(b.due));
-
-    const leftTodoList = newTodoList.filter(
-      (todo) =>
-        !(
-          dayjs().diff(todo.due, "day") <= 0 &&
-          dayjs().diff(todo.due, "day") > -3
-        )
-    );
-    setTodoList([...dueTodoList, ...leftTodoList]);
-  }, [filter, buttonFilter, todos]);
+  const todoList = useFilterTodoList(todos, filter, buttonFilter);
 
   return (
     <Grid container mt={3}>
